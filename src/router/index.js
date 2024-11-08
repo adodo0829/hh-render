@@ -15,6 +15,10 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
+    redirect: "/GLSL",
+  },
+  {
+    path: "/GLSL",
     name: "GLSL",
     component: GLSL,
   },

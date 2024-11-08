@@ -1,16 +1,33 @@
 <template>
   <div id="app">
     <section id="nav">
-      <router-link to="/">GLSL</router-link>
-      <router-link to="/Coord">坐标系</router-link>
-      <router-link to="/Vector">点&向量</router-link>
-      <router-link to="/Matrix">矩阵</router-link>
+      <router-link v-for="item in routeList" :to="item.path" :key="item.path">{{
+        item.name
+      }}</router-link>
     </section>
     <section id="content">
       <router-view />
     </section>
   </div>
 </template>
+
+<script>
+export default {
+  name: "Home",
+  components: {},
+  data() {
+    return {
+      routeList: [],
+    };
+  },
+  mounted() {
+    this.routeList = this.$router.options.routes.filter(
+      (item) => item.path !== "/"
+    );
+  },
+  methods: {},
+};
+</script>
 
 <style lang="scss">
 #app {
