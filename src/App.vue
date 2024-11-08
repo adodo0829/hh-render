@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  name: "Home",
+  name: "App",
   components: {},
   data() {
     return {
@@ -21,11 +21,24 @@ export default {
     };
   },
   mounted() {
-    this.routeList = this.$router.options.routes.filter(
-      (item) => item.path !== "/"
-    );
+    this.init();
   },
-  methods: {},
+  methods: {
+    init() {
+      const { query } = this.$route;
+
+      const { options } = this.$router;
+      let menus = options.routes.filter((item) => item.path !== "/");
+
+      if (!query.interview) {
+        // menus
+        menus = menus.filter((item) => item.name !== "interview");
+      }
+
+      console.log(menus);
+      this.routeList = menus;
+    },
+  },
 };
 </script>
 
@@ -44,7 +57,7 @@ export default {
       padding: 4px;
       font-weight: bold;
       color: #2c3e50;
-      &.router-link-exact-active {
+      &.router-link-active {
         color: #35d152;
         background-color: #ccc;
       }
