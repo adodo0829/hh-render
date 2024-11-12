@@ -34,8 +34,6 @@ export default {
         // menus
         menus = menus.filter((item) => item.name !== "interview");
       }
-
-      console.log(menus);
       this.routeList = menus;
     },
   },

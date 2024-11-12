@@ -1,6 +1,6 @@
 import { vertexString, fragmentString } from "./config";
 import { Searcher } from "../searcher";
-import { TextureFactroy } from "./texture";
+import { TextureFactroy } from "../texture";
 import { Viewport } from "../viewport";
 import * as glMatrix from "../lib/gl-matrix.js";
 import { DisplayStatus } from "../lib/utils";

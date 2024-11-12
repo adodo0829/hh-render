@@ -109,3 +109,75 @@ export class Searcher {
     return result;
   }
 }
+
+export class SearchableObject {
+  _srh;
+  _sable = false;
+  _expandRadius = 0;
+  constructor(srh) {
+    this._srh = srh;
+  }
+
+  set searchable(able) {
+    if (able == this._sable) return;
+    this._sable = able;
+    if (able === true) {
+      this.registToSearcher();
+    } else {
+      this.deregistToSearcher();
+    }
+  }
+
+  get searchable() {
+    return this._sable;
+  }
+
+  set expandRadius(r) {
+    if (this._expandRadius == r) return;
+    this._expandRadius = r;
+    // 刷新搜索区域
+    this._sable && this.registToSearcher();
+  }
+
+  get expandRadius() {
+    return this._expandRadius;
+  }
+
+  get id() {
+    return "";
+  }
+
+  /**
+   * 获取当前的顶点坐标 override
+   */
+  getVertexPositions(expand = 0) {
+    return [];
+  }
+
+  /**
+   * 注册成可查找
+   */
+  registToSearcher() {
+    const vs = this.getVertexPositions(this._expandRadius);
+    const vx = vs.filter((v, k) => k % 2 == 0);
+    const vy = vs.filter((v, k) => k % 2 != 0);
+    const obj = {
+      id: this.id,
+      bounds: {
+        minX: Math.min.apply(null, vx),
+        maxX: Math.max.apply(null, vx),
+        minY: Math.min.apply(null, vy),
+        maxY: Math.max.apply(null, vy),
+      },
+      vertexes: vs,
+    };
+    this._srh.insert(obj);
+  }
+
+  /**
+   * 解除注册
+   */
+  deregistToSearcher() {
+    this._srh.remove(this.id);
+  }
+}

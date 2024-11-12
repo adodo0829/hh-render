@@ -19,8 +19,8 @@ const TextureGap = Math.pow(2, 1);
 export class TextureFactroy {
   gl;
   packer; //: GrowingPacker;
-  blocks; //: PNode[] = [];
-  fontMaps; //: Map<string, ImageTexture> = new Map();
+  blocks = []; //: PNode[] = [];
+  fontMaps = new Map(); //: Map<string, ImageTexture> = new Map();
   texture; //: WebGLTexture;
   // 初始化材质
   constructor(glContext) {
@@ -32,7 +32,7 @@ export class TextureFactroy {
     this.texture = gl.createTexture();
     // 创建不可变材质空间
     gl.bindTexture(gl.TEXTURE_2D, this.texture);
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1); //y轴反转
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1); // y轴反转
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);

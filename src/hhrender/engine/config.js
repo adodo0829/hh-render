@@ -1,7 +1,5 @@
-export const vertexString = `
-    #version 300 es
-    // 指定currVertexAndRatio变量在顶点属性数组中的位置是1
-	layout(location=1) in vec4 currVertexAndRatio;			// 顶点坐标和变形系数
+export const vertexString = `#version 300 es
+	layout(location=1) in vec4 currVertexAndRatio;			 // 指定currVertexAndRatio变量在顶点属性数组中的位置是1 // 顶点坐标和变形系数
 	layout(location=2) in vec4 prevVertexAndRatio;
 	layout(location=3) in vec4 nextVertexAndRatio;
 	layout(location=4) in vec4 uvAndEdgeOffsetRatio;		// UV
@@ -13,8 +11,7 @@ export const vertexString = `
 	layout(location=10) in vec4 textBorderColor;			// 文字边框颜色
 	layout(location=11) in vec4 opacityAndDisplayAndVpScaleAndVpTrans;			// 透明度 是否显示 是否跟随视口缩放 是否跟随视口平移
     
-    // out是从顶点着色器传递到片段着色器（用于处理像素颜色）的数据
-	out vec2 vTexCoord;				// UV
+	out vec2 vTexCoord;				// UV  // out是从顶点着色器传递到片段着色器（用于处理像素颜色）的数据
 	out vec4 vBgColor;
 	out float vIsText;
 	out float vTextBorderWidth;
@@ -156,8 +153,7 @@ export const vertexString = `
 	}
 `;
 
-export const fragmentString = `
-    #version 300 es
+export const fragmentString = ` #version 300 es
 	precision mediump float;
 	uniform sampler2D uSampler;
 	// uniform vec2 uConversionVec2;	// 坐标转换

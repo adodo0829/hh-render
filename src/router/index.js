@@ -6,6 +6,7 @@ import GLSL from "@/views/GLSL.vue";
 import Coord from "@/views/Coord.vue";
 import Vector from "@/views/Vector.vue";
 import Matrix from "@/views/Matrix.vue";
+import TEST_GL_API from "@/views/TEST_GL_API.vue";
 
 import interview from "@/views/interview/index.vue";
 import html from "@/views/interview/1.html.vue";
@@ -35,6 +36,11 @@ const routes = [
     path: "/Matrix",
     name: "Matrix",
     component: Matrix,
+  },
+  {
+    path: "/TEST_GL_API",
+    name: "TEST_GL_API",
+    component: TEST_GL_API,
   },
   {
     path: "/interview",

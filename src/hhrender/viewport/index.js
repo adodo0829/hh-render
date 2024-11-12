@@ -17,9 +17,9 @@ export const ViewportEvent = {
 export class Viewport extends EventDispatcher {
   _engine; //: Engine;
   _gl;
-  _cvec2; // Float32Array = new Float32Array(2);
-  _vpScaleVec2; // Float32Array = new Float32Array(2);
-  _vpTranslationVec2; // Float32Array = new Float32Array(2);
+  _cvec2 = new Float32Array(2);
+  _vpScaleVec2 = new Float32Array(2);
+  _vpTranslationVec2 = new Float32Array(2);
   _vpRotation = 0;
   _bgColor = [0, 0, 0, 1];
   _vpWidth; // number;

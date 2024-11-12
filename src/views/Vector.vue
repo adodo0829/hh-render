@@ -71,7 +71,7 @@ b=[
  */
 
 const EPSILON = 0.00000001;
-const areEqual = (one, other, epsilon = EPSILON) => Math.abs(one - other) < epsilon;
+const areEqual = (one, other, epsilon = EPSILON) => Math.abs(one - other) &lt; epsilon;
 
 // 向量由一系列数值构成，每维数值都是向量的一个分量
 // 1.方向
