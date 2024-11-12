@@ -3,7 +3,7 @@ const isDev = process.env.NODE_ENV === "development";
 const port = 8000;
 
 module.exports = {
-  publicPath: "/",
+  publicPath: isDev ? "" : "/",
   assetsDir: "static",
   filenameHashing: true,
   lintOnSave: isDev, // 把eslint校验打开， vscode安装eslint插件
@@ -21,11 +21,11 @@ module.exports = {
     devServer: {
       // proxy: {
       //   "/cst_wms_new": {
-          // target: process.env.VUE_APP_BASE_URL,
-          // 联调后端本地接口时打开下面注释
-          // pathRewrite: {
-          //   '^/cst_wms_new': '',
-          // },
+      // target: process.env.VUE_APP_BASE_URL,
+      // 联调后端本地接口时打开下面注释
+      // pathRewrite: {
+      //   '^/cst_wms_new': '',
+      // },
       //   },
       //   "/auth": {
       //     // target: process.env.VUE_APP_AUTH_URL,

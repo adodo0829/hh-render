@@ -56,7 +56,7 @@ export default {
       vpOffsetY: 0,
       vpOx: 0,
       vpOy: 0,
-      vpScaleRatio: 100,
+      vpScaleRatio: 1,
     };
   },
   mounted() {
@@ -109,7 +109,9 @@ export default {
     },
 
     handleClear() {
-      window.g && window.g.clear();
+      window.g1 && window.g1.clear();
+      window.g2 && window.g2.clear();
+      window.g3 && window.g3.clear();
     },
 
     handleSetVp() {
@@ -142,7 +144,7 @@ export default {
     drawRects(engine, texture, countEach, offsetX, offsetY, areaWidth) {
       const rectMesh = new RectMesh();
       const g1 = new Generator(engine, rectMesh);
-      window.g = g1;
+      window.g1 = g1;
       const count = countEach;
       const w = areaWidth / count;
       for (let i = 0; i < count; i++) {
@@ -169,9 +171,9 @@ export default {
     drawOneWayArrow() {
       const arrowMesh = new OneWayArrowMesh(100, 100);
       const g = new Generator(window.engine, arrowMesh);
-      window.g = g;
+      window.g2 = g;
       const obj = g.instance().show();
-      obj.translation = [100, 100];
+      obj.translation = [300, 300];
       obj.vertexOffsetValue = [0, 100];
       obj.rotation = Math.PI / 4;
       obj.backgroundColor = getRandomColor();
@@ -181,9 +183,9 @@ export default {
 
     drawTwoWayArrow() {
       const g = new ArrowGenerator(window.engine, 100, 100, 10);
-      window.g = g;
+      window.g3 = g;
       const obj = g.instance();
-      obj.fromTo = [100, 100, 300, 300];
+      obj.fromTo = [0, 0, 200, 200];
       obj.type = 2;
       obj.show();
       obj.backgroundColor = getRandomColor();
