@@ -1,6 +1,7 @@
 <template>
   <div class="home">
     <p>GLSL ES 3.00</p>
+	游戏引擎 https://github.com/ThisisGame/cpp-game-engine-book
     <pre>
 <h3>基本结构</h3>
 预处理器指令：
@@ -21,6 +22,19 @@ out：用于顶点着色器的输出和片段着色器的输入。
 Uniform变量：
 用于在应用程序和着色器之间传递数据。
 声明方式：uniform type name;
+
+uniform 用来修饰统一变量。
+GPU是并行的，Shader是执行在GPU上的程序。
+当我们需要绘制3个顶点，GPU将3个顶点数据，分摊到3个GPU逻辑单元并行处理，每个逻辑单元处理的不同的顶点坐标数据，称之为属性变量。
+每个逻辑单元也会需要一些相同的数据，这些相同的数据，称之为统一变量。
+uniform mat4 u_mvp;
+
+<p>es2.0语法</p>
+attribute 表示这个变量，每执行一次Shader，都需要被赋值
+attribute vec3 a_pos;
+attribute vec4 a_color;
+输出变量由varying关键字修饰，用于从顶点着色器，传递数据到片段着色器
+varying vec4 v_color;
 
 <h3>布局限定词</h3>
 位置：
@@ -53,7 +67,6 @@ texture, texture2D, textureCube等。
 
 <h3>变换反馈：</h3>
 允许着色器将数据直接输出到缓冲区。
-
     </pre>
 
     <div>内置函数</div>
@@ -128,7 +141,17 @@ GLSL ES 3.00支持的内置函数非常丰富，涵盖了数学运算、几何�
 - `textureGrad(sampler, P, dPdx, dPdy)`：使用显式梯度进行纹理采样。
     </pre>
 
-    <p>顶点着色器</p>
+    <h3>顶点着色器</h3>
+	<p>
+		<pre>
+void main()
+{
+    gl_Position = vec4(vPos, 1.0);
+}
+		</pre>
+每个Shader都有入口函数 main()，顶点Shader主要工作就是：计算坐标。
+得到坐标计算结果后，传给内置变量 gl_Position。
+	</p>
     <p>在线测试 https://thebookofshaders.com/edit.php</p>
 
     <pre>
@@ -294,6 +317,31 @@ GLSL ES 3.00支持的内置函数非常丰富，涵盖了数学运算、几何�
 
 <h3>片段着色器</h3>
 <pre>
+片段着色器(像素着色器)的功能就是：输出颜色；
+varying vec4 v_color;
+void main()
+{
+    gl_FragColor = v_color;
+}
+
+片段着色器(像素着色器)也是并行的，不过执行的次数不是顶点个数，而是屏幕像素个数。
+假如绘制一个960x540的长方形，每一个像素点的颜色，都是通过执行一次片段着色器来得到，那么GPU需要执行960x540次
+
+顶点数越多，顶点着色器执行次数越多。
+屏幕分辨率越高，片段着色器执行次数越多。
+这里可以推出手游常见的两种优化方式：减少顶点、降低分辨率
+
+绘制一个200x200 左右大小的正方形
+正方形四个顶点，顶点着色器只需要执行4次，而面对200x200个像素，片段着色器，需要执行200x200次。
+只有正方形四个顶点的那四个像素，才能直接从顶点着色器拿到颜色数据，那中间的像素颜色数据从哪里来？
+
+插值
+中间的像素颜色，都是插值得到的。
+
+左上角顶点颜色是红色，右上角顶点颜色是蓝色，可以看到中间颜色是由红色、蓝色插值混合而成。
+
+注意：所有从顶点着色器输出到片段着色器的数据，都会插值
+
 export const fragmentString = `
   #version 300 es
 	precision mediump float;
@@ -372,6 +420,155 @@ export const fragmentString = `
 	}
 `;
 </pre>
+
+<div>
+	<h3>贴图显示逻辑</h3>
+	<pre>
+顶点色能做到的效果有限，所以有另一套机制:UV坐标。
+UV坐标指的是顶点对应在图片的哪个位置，仍旧拿上面的效果举例，4个顶点(左下、右下、右上、左上)分别和图片的4个角对应，那么UV坐标就是下面这样:
+
+static const glm::vec3 Positions[6] =
+{
+    //第一个三角形
+    { -1.0f, -1.0f, 0.0f},//左下
+    {  1.0f, -1.0f, 0.0f},//右下
+    {  1.0f,  1.0f, 0.0f},//右上
+    //第二个三角形
+    {  1.0f,  1.0f, 0.0f},//右上
+    { -1.0f,  1.0f, 0.0f},//左上
+    { -1.0f, -1.0f, 0.0f} //左下
+};
+static const glm::vec2 UVs[6] = 
+{
+    //第一个三角形
+    {  0.0f,  0.0f},//左下
+    {  1.0f,  0.0f},//右下
+    {  1.0f,  1.0f},//右上
+    //第二个三角形
+    {  1.0f,  1.0f},//右上
+    {  0.0f,  1.0f},//左上
+    {  0.0f,  0.0f} //左下
+}
+
+UV坐标范围是[0,1]；顶点坐标和图片对应起来的操作，一般叫做UV映射
+	</pre>
+</div>
+
+<section>
+<pre>
+CPU与GPU的通信方式：
+
+CPU和GPU是一种CS模式，即客户端-服务器模式。
+客户端不能直接访问服务器资源，客户端想对服务器资源进行操作，只能通过网络协议交互，由服务器进行操作。
+CPU就是客户端，GPU就是服务器。
+
+上传图片数据到显卡分为几步
+1   glGenTextures	通知显卡创建纹理对象，返回句柄;
+2	glBindTexture	将纹理绑定到特定纹理目标;
+3	glTexImage2D	将图片rgb数据上传到GPU;
+
+上面的API都是阻塞式的。
+所以在游戏中，需要减小图片尺寸减少上传时间，需要打包图集减少上传次数
+
+</pre>
+</section>
+
+<pre>
+引擎主循环每执行一次，都需要上传顶点数据到GPU
+在实际项目中是不可行的，游戏同屏顶点数普遍超过10w，每一帧都上传10w顶点数据到GPU，想想都可怕。
+
+针对性的优化有2点：
+1.减少上传数据量---- 顶点索引
+2.在GPU上缓存数据---- 缓冲区对象
+
+
+顶点坐标数据是一个数组，那么顶点索引就是这个数组的index; 将顶点坐标去重，然后新建数组存储下标
+一个顶点，包含了顶点坐标、顶点颜色、UV坐标这三个数据
+使用顶点索引(kVertexIndexVector)进行绘制，需要引入新的API - glDrawElements
+
+glDrawElements 通过顶点索引进行绘制，大幅度减少了上传到GPU的数据，但是仍然是每一帧都上传一次。
+是否可以将数据缓存在GPU，这样只需要上传一次即可？ OpenGL引入了Buffer Object，即缓冲区对象;
+顶点数据上传到GPU之后，就缓存起来，后续渲染直接从显存获取,
+
+使用缓冲区对象进行绘制分为以下步骤：
+创建VBO(顶点缓冲区对象) 和 EBO(索引缓冲区对象)，并上传数据
+将Shader变量和缓冲区对象进行关联
+使用EBO绘制
+</pre>
+
+<p> openGL3.0 </p>
+<pre>
+从 #version 110 升级为 #version 330
+增加了顶点数组对象(Vertex Array Object，简称VAO)
+使用关键字in 替代 attribute
+使用关键字out 替代varying
+采样函数从texture2D变为texture
+片段着色器的输出，可以使用关键字out指定自定义变量。
+
+顶点着色器
+#version 330 core
+uniform mat4 u_mvp;
+layout(location = 0) in  vec3 a_pos;
+layout(location = 1) in  vec4 a_color;
+out vec4 v_color;
+void main()
+{
+    gl_Position = u_mvp * vec4(a_pos, 1.0);
+    v_color = a_color;
+};
+
+片段着色器
+#version 330 core
+in vec4 v_color;
+layout(location = 0) out vec4 o_fragColor;
+void main()
+{
+    o_fragColor = v_color;
+}
+
+顶点数组对象(Vertex Array Object，简称VAO)可以减少OpenGL API的调用次数。
+VAO就像一个容器，在GPU端记录了一次绘制的顶点的状态。
+
+每次绘制时，需要绑定VBO、EBO，这就调用了2次API
+//指定当前使用的VBO
+glBindBuffer(GL_ARRAY_BUFFER, kVBO);
+glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, kEBO);
+
+// 生成一个VAO
+glGenVertexArrays(1,kVAO);
+glBindVertexArray(kVAO);
+{
+    //指定当前使用的VBO
+    glBindBuffer(GL_ARRAY_BUFFER, kVBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, kEBO);
+}
+glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+在绘制的时候只要绑定VAO
+glBindVertexArray(kVAO);
+{
+    glDrawElements(GL_TRIANGLES,36,GL_UNSIGNED_SHORT,0);//使用顶点索引进行绘制，最后的0表示数据偏移量。
+}
+glBindVertexArray(0);
+
+将非动态的内容，都可以设置到VAO里面
+
+<h3>Mesh</h3>
+<p>模型就是指Mesh</p>
+mesh包含一些列顶点数据，静态模型
+
+相机的作用就是提供View、Projection这两个矩阵，MeshRenderer拿到这两个矩阵和模型世界坐标相乘得到mvp，传入GPU。
+多相机渲染，就是要遍历多个相机，用当前 index 相机的View、Projection矩阵，提供给MeshRenderer拿去做计算
+
+所谓材质，就是一系列属性的集合。
+模型材质，是渲染这个模型所需要的一系列属性的集合，例如指定贴图、颜色。
+物理材质，就是物体用于物理计算所需要的一系列属性的集合，例如摩擦系数、弹性系数
+
+</pre>
+
+
+
+
   </div>
 </template>
 

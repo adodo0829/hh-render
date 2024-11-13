@@ -23,7 +23,7 @@ export default {
   },
   mounted() {
     const interviewsList = this.$router.options.routes.filter(
-      (item) => item.name === "interview"
+      (item) => item.name === "Study"
     )[0].children;
 
     this.interviewsList = interviewsList;
@@ -37,10 +37,11 @@ export default {
   display: flex;
   background-color: #f4f4f4;
   a {
-    padding: 4px;
+    padding: 4px 12px;
     background-color: #ccc;
     &.router-link-active {
       color: #06ce06;
+      background-color: #fff;
     }
   }
 }

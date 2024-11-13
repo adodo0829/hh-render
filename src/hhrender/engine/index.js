@@ -123,7 +123,10 @@ export class Engine {
     window.requestAnimationFrame(() => this.render());
   }
 
-  // 图形绘制
+  // 主循环主要做3件事：
+  // 坐标系转换
+  // 上传mvp矩阵
+  // 调用 glDrawArrays 上传顶点数据并进行绘制(这就是一个DrawCall完成)
   draw(indexlist = null, isForce = false) {
     const gl = this.gl;
     const r1 = this.updateViewport();

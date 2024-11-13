@@ -25,15 +25,13 @@ export default {
   },
   methods: {
     init() {
-      const { query } = this.$route;
-
+      // const { query } = this.$route;
       const { options } = this.$router;
       let menus = options.routes.filter((item) => item.path !== "/");
-
-      if (!query.interview) {
-        // menus
-        menus = menus.filter((item) => item.name !== "interview");
-      }
+      // if (!query.interview) {
+      //   // menus
+      //   menus = menus.filter((item) => item.name !== "interview");
+      // }
       this.routeList = menus;
     },
   },

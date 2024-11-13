@@ -3,7 +3,7 @@ const isDev = process.env.NODE_ENV === "development";
 const port = 8000;
 
 module.exports = {
-  publicPath: isDev ? "" : "/hh-render/",
+  publicPath: isDev ? "/" : "/hh-render/",
   assetsDir: "static",
   filenameHashing: true,
   lintOnSave: isDev, // 把eslint校验打开， vscode安装eslint插件
