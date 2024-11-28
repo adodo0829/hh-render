@@ -1,6 +1,7 @@
 <template>
   <div class="home">
     <p>GLSL ES 3.00</p>
+	中文手册 https://github.com/adodo0829/GLSL-Card
 	游戏引擎 https://github.com/ThisisGame/cpp-game-engine-book
     <pre>
 <h3>基本结构</h3>

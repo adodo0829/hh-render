@@ -23,6 +23,8 @@ import designmode from "@/views/study/11.design-mode.vue";
 import aigorithm from "@/views/study/12.aigorithm.vue";
 import bussiness1 from "@/views/study/13.bussiness1.vue";
 
+import test from "@/views/study/16.test.vue";
+
 const routes = [
   {
     path: "/",
@@ -123,6 +125,11 @@ const routes = [
         path: "/study/bussiness1",
         name: "业务1",
         component: bussiness1,
+      },
+      {
+        path: "/study/test",
+        name: "测试test",
+        component: test,
       },
     ],
   },

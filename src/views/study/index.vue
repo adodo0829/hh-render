@@ -36,6 +36,7 @@ export default {
 .i-nav {
   display: flex;
   background-color: #f4f4f4;
+  flex-wrap: wrap;
   a {
     padding: 4px 12px;
     background-color: #ccc;
