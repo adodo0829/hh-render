@@ -23,7 +23,7 @@ import designmode from "@/views/study/11.design-mode.vue";
 import aigorithm from "@/views/study/12.aigorithm.vue";
 import bussiness1 from "@/views/study/13.bussiness1.vue";
 
-import test from "@/views/study/16.test.vue";
+import logicCode from "@/views/study/16.logicCode.vue";
 
 const routes = [
   {
@@ -128,8 +128,8 @@ const routes = [
       },
       {
         path: "/study/test",
-        name: "测试test",
-        component: test,
+        name: "logicCode",
+        component: logicCode,
       },
     ],
   },
