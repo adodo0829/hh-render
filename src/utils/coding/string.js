@@ -4,7 +4,24 @@
  * 返回一个统计对象，key为字符，value为出现次数 { a: 5 }
  */
 const s = "aswfswawbswdaawdaw";
-function getItemOfString(s) {}
+function getItemOfString(s) {
+  let hash = Object.create(null);
+  for (const char of s) {
+    hash[char] = (hash[char] || 0) + 1;
+  }
+  let [maxChar, maxCount] = ["", 0];
+  Object.entries(hash).forEach((item) => {
+    const char = item[0];
+    const count = item[1];
+    if (count > maxCount) {
+      maxChar = char;
+      maxCount = count;
+    }
+  });
+  return {
+    [maxChar]: maxCount,
+  };
+}
 
 /**
  * 实现报数序列
@@ -58,4 +75,51 @@ function longestCommonPrefix(arr) {
   }
 
   return res;
+}
+
+/**
+ * 给定一个字符串，找到它的第一个不重复的字符，并返回它的索引。如果不存在，则返回 -1。
+- s = "leetcode" 返回 0.
+- s = "loveleetcode" 返回 2.
+ */
+var str = "leetcode";
+function firstUniqChar(str) {
+  for (let i = 0; i < str.length; i++) {
+    let curChar = str[i];
+    // 唯一： 索引一致
+    if (str.lastIndexOf(curChar) === str.indexOf(curChar)) {
+      return i;
+    }
+  }
+  return -1;
+}
+console.log(firstUniqChar(str));
+
+/**
+ * 实现 String.prototype.indexOf
+ */
+function myIndexOf(source, target) {
+  if (source.length < target.length) return -1;
+  for (let i = 0; i < source.length; i++) {
+    // 切片对比
+    let splitChar = source.slice(i, i + target.length);
+    if (splitChar === s) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+/**
+ * 字符串的大小写取反（大写变小写小写变大写），例如 ’AbC' 变成 'aBc'
+ */
+
+function transformStr(str) {
+  let tempArr = str.split("");
+  let result = tempArr.map((char) => {
+    return char === char.toUpperCase()
+      ? char.toLowerCase()
+      : char.toUpperCase();
+  });
+  return result.join("");
 }

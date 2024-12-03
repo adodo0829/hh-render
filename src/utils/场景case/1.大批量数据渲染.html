@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>渲染一万条数据</h1>
+    <ul class="content"></ul>
+    <script>
+        let listData = [];
+        function createData(size) {
+            let list = [];
+            for (let i = 0; i < size; i++) {
+                list.push({
+                    id: i,
+                    content: Math.random() * 1000,
+                });
+            }
+            return list;
+        }
+        listData = createData(100000);
+        // 总数据
+        const total = 10000,
+            // 每次处理数据
+            each = 20,
+            // 需要处理次数
+            needTimes = Math.ceil(total / each),
+            // 父容器
+            content = document.querySelector(".content");
+        // 当前处理次数
+        let currentTime = 0;
+
+        // 处理元素插入
+        function add() {
+            const fragment = document.createDocumentFragment();
+            for (let i = 0; i < each; i++) {
+                const li = document.createElement("li");
+                li.innerText = listData.slice(
+                    currentTime * each + i,
+                    currentTime * each + i + 1
+                )[0].id;
+                fragment.appendChild(li);
+            }
+            content.appendChild(fragment);
+            currentTime++;
+
+            if (currentTime < needTimes) {
+                window.requestAnimationFrame(add);
+            }
+        }
+
+        window.requestAnimationFrame(add);
+    </script>
+</body>
+
+</html>

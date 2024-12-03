@@ -44,7 +44,7 @@
 #### 宏任务、微任务
 - 宏任务
     - 宿主提供的异步方法和任务
-        - script 的执行（JS整体代码，比如 `<script>...</script>` 这段脚本整体，也是个宏任务）
+        - script 的执行（JS整体代码，比如 `script...script` 这段脚本整体，也是个宏任务）
         - setTimeout、setImmediate、setInterval
         - UI渲染、UI交互（Ajax、mouseover, click 各种事件回调）、I/O
 - 微任务
@@ -114,7 +114,8 @@ JavaScript在浏览器中的主要任务之一是与DOM进行交互。如果允�
     - **单线程：指JavaScript在任何时刻只有一个主线程在执行代码。**
     - **事件循环**：通过事件循环机制，JavaScript能够处理异步任务，实现非阻塞的并发执行。
     - **简单性和安全性**：单线程模型简化了开发，并避免了多线程编程中的复杂问题，特别是在DOM操作方面。
-      </pre>
+</pre
+      >
     </div>
 
     <div>
@@ -130,6 +131,44 @@ JavaScript在浏览器中的主要任务之一是与DOM进行交互。如果允�
     - 解析JS脚本，运行JS代码
       </pre>
     </div>
+
+    <div>
+      <pre>
+css放在 head 中的好处：
+- **提高加载性能**：在页面内容渲染之前应用样式，减少页面重绘和重排。
+- **改善用户体验**：避免用户在页面加载时看到未样式化的内容，防止“闪烁”效果。   
+
+为何要将 JS 放在 HTML 底部
+1. S 放在底部可以保证让**浏览器优先渲染完现有的 HTML 内容**，让用户先看到内容，体验好。
+2. 另外，JS 执行如果涉及 DOM 操作，得等待 DOM 解析完成才行，JS 放在底部执行时，HTML 肯定都解析成了 DOM 结构。**JS 如果放在 HTML 顶部，JS 执行的时候 HTML 还没来得及转换为 DOM 结构，可能会报错。**
+3. **渲染过程中，如果遇到`script`就停止渲染**，执行 JS 代码。因为**浏览器渲染和 JS 执行共用一个线程**，**而且这里必须是单线程操作，多线程会产生渲染 DOM 冲突**。待`script`内容执行完之后，浏览器继续渲染。
+    </pre
+      >
+    </div>
+
+    <pre>
+JS 延迟加载的方法有哪些
+1. async：给script标签加async属性，则加载和渲染后续文档元素的过程将和 script.js 的加载与执行并行进行（异步）
+2. defer：给script标签加defer属性，加载后续文档元素的过程将和 script.js 的加载并行进行（异步），但是 script.js 的执行要在所有元素解析完成之后，DOMContentLoaded 事件触发之前完成
+3. 动态创建script标签：等到DOMContentLoaded 事件触发时，生成一个script标签，渲染到页面上上
+4. setTimeout 定时器延迟代码执行
+
+- 懒加载的主要目的是作为服务器前端的优化，减少请求数或延迟请求数
+- 预加载可以说是牺牲服务器前端性能，换取更好的用户体验，这样可以使用户的操作得到最快的反映
+img.src = imgSrc;
+img.onload = function() { // 图片加载完后再添加到页面中去
+    oDiv.appendChild(img);
+}
+
+浏览器多标签页之间的通信
+1. websocket
+    1. 全双工（full-duplex）通信自然可以实现多个标签页之间的通信。
+2. setInterval + cookie 存值
+    1. 在页面 A 设置一个使用 setInterval 定时器不断刷新，检查 Cookies 的值是否发生变化，如果变化就进行刷新的操作。
+3. **使用 localStorage**
+    1. localStorage 是浏览器多个标签共用的存储空间，所以可以用来实现多标签之间的通信（ps：sessionStorage 是会话级的存储空间，每个标签页都是单独的）。 直接在 window 对象上添加监听即可：
+window.addEventListener("storage", (e) =》 console.log(e))
+    </pre>
   </section>
 </template>
 
@@ -141,7 +180,18 @@ export default {
     return {};
   },
   mounted() {},
-  methods: {},
+  methods: {
+    // interview
+    // 1.介绍一下你对浏览器内核的理解
+    // 浏览器内核-->渲染引擎
+    // 浏览器内核-->JS引擎
+    // 2.Ajax、Axios、Fetch 有啥区别
+    // - Ajax：是对 **XMLHttpRequest** (XHR)的封装
+    // - Axios：是基于**Promise对XHR**对象的封装
+    // - Fetch：是window的一个方法，基于**Promise**，与**XHR无关**，**不兼容IE**
+    // 3.单点登录
+    // SSO 一般都需要一个独立的认证中心（passport），子系统的登录均得通过 passport，子系统本身将不参与登录操作，当一个系统成功登录以后，passport 将会颁发一个令牌给各个子系统，子系统可以拿着令牌会获取各自的受保护资源，为了减少频繁认证，各个子系统在被 passport 授权以后，会建立一个局部会话，在一定时间内可以无需再次向 passport 发起认证。
+  },
 };
 </script>
 
