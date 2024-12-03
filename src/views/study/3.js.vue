@@ -739,6 +739,13 @@ oBtn2.addEventListener('click', oBtnMap.get(oBtn2), false);
 
 oBtn1.remove();
 oBtn2.remove();
+
+# this指向
+- this 是 JavaScript 的关键字
+- 是 当前环境 执行期上下文对象 的 一个属性
+- this 明确指向的时机：**执行期**
+- this 在不同环境、不同作用域下，表现不同
+
     </pre>
   </div>
 </template>

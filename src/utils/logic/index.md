@@ -239,3 +239,146 @@ doSomething()
 
 ### async / await
 
+内置执行期 co 函数封装到了 await 内部;
+async 函数会返回一个 Promise 对象，如果在函数中  return  一个直接量，async 会把这个直接量通过  Promise.resolve()  封装成 Promise 对象。
+
+```js
+async function fn() {}
+console.log(fn); // [AsyncFunction: fn]
+console.log(fn()); // Promise {<fulfilled>: undefined}
+// 怎么才能使值不是undefined呢？很简单，函数有return返回值
+async function fn(num) {
+  return num;
+}
+console.log(fn); // [AsyncFunction: fn]
+console.log(fn(10)); // Promise {<fulfilled>: 10}
+fn(10).then((res) => console.log(res)); // 10
+```
+
+await 是在等待一个 async 函数完成; wait 等待的是一个表达式，这个表达式的计算结果是 Promise 对象或者其它值
+
+```js
+const fs = require("fs");
+const util = require("util");
+const readFile = util.promisify(fs.readFile);
+
+async function read() {
+  // try 或者 catch 不显式的 return 值，默认走 resolve
+  try {
+    let value = await readFile("./first.tt", "utf-8");
+    console.log("await 拿到的value", value);
+    //  return 'async read 返回值'; // 走 resolve
+  } catch (err) {
+    console.log("try-catch捕获的错误", err);
+    // return Promise.reject(err); // 走 reject
+  }
+  // try、catch中如果都return，下面一行代码就不执行了
+  console.log("try-catch后边代码"); // 这里会执行
+}
+
+let promise = read();
+promise.then(
+  (val) => {
+    console.log("then success:", val);
+  },
+  (err) => {
+    console.log("then fail", err);
+  }
+);
+
+console.log(1111);
+
+// 生成器函数
+function generator(arr) {
+  let nextIdx = 0,
+    len = arr.length;
+
+  return {
+    next() {
+      return nextIdx < len
+        ? { value: arr[nextIdx++], done: false }
+        : { value: undefined, done: true };
+    },
+  };
+}
+// 应用：中间件
+// https://evelance.notion.site/7-20-async-await-e2f51959b4e24933bf1cf8e8580cde75
+
+function generatorToAsync(generatorFn) {
+  return function () {
+    const gen = generatorFn.apply(this, arguments); // gen有可能传参
+    // 返回一个Promise
+    return new Promise((resolve, reject) => {
+      function go(key, arg) {
+        let res;
+        try {
+          res = gen[key](arg); // 这里有可能会执行返回reject状态的Promise
+        } catch (error) {
+          return reject(error); // 报错的话会走catch，直接reject
+        }
+
+        // 解构获得value和done
+        const { value, done } = res;
+        if (done) {
+          // 如果done为true，说明走完了，进行resolve(value)
+          return resolve(value);
+        } else {
+          // 如果done为false，说明没走完，还得继续走
+
+          // value有可能是：常量，Promise，Promise有可能是成功或者失败
+          return Promise.resolve(value).then(
+            (val) => go("next", val),
+            (err) => go("throw", err)
+          );
+        }
+      }
+
+      go("next"); // 第一次执行
+    });
+  };
+}
+
+const asyncFn = generatorToAsync(gen);
+asyncFn().then((res) => console.log(res));
+```
+
+## 浏览器事件循环逻辑
+
+```js
+document.body.style.backgroundColor = "orange";
+console.log(1);
+setTimeout(() => {
+  document.body.style.backgroundColor = "green";
+  console.log(2);
+}, 100);
+Promise.resolve(3).then((num) => {
+  document.body.style.backgroundColor = "red";
+  console.log(num);
+});
+console.log(4);
+```
+
+## 手写系列
+
+```js
+function myInstanceOf(instance, constructor) {
+  var left = instance, // 左边是实例
+    right = constructor, // 右边是构造函数
+    proto = left.__proto__; // 拿到实例的原型
+  while (proto) {
+    if (proto === right.prototype) {
+      return true;
+    }
+    // 没找到，就向上再找
+    proto = proto.__proto__;
+  }
+  // 找到头都没找到，就是false
+  return false;
+}
+
+function _new(fn, ...args) {
+  const obj = Object.create(fn.prototype);
+  const ret = fn.apply(obj, args);
+  return ret instanceof Object ? ret : obj;
+}
+```

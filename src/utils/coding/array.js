@@ -1,60 +1,3 @@
-# coding
-
-## string
-
-```js
-/**
- * 实现一个函数 getItemOfString, 查找字符串中出现最多的项
- * 输入：'aswfswawbsdaawdaw'
- * 返回一个统计对象，key为字符，value为出现次数 { a: 5 }
- */
-const s = "aswfswawbswdaawdaw";
-console.log(getItemOfString(s));
-```
-
-## array
-
-### 数组切片
-
-```js
-`/**
- * 实现一个chunk函数, chunk(arr, n)
- * 将一维数组转化二维的分段数组, n为内层数组最大长度，不够长度时自动补到最后位
- * [1,2,3,4,5,6,7] =》 [[1,2,3], [4,5,6], [7]]
- */
-function chunk(arr, n) {
-  let res = [];
-  // ===== TODO ======
-  return res;
-}
-let arr = [1, 2, 3, 4, 5, 6, 7];
-// 当n=3时
-chunk(arr, 3); // [[1,2,3], [4,5,6], [7]]
-// 当n=2时
-chunk(arr, 2); // [[1,2], [3，4], [5,6], [7]]
-
-function chunk1(input, size) {
-  size = Math.max(toInteger(size), 0);
-  if (!Array.isArray(input)) {
-    return [];
-  }
-  if (size < 1) {
-    return [];
-  }
-  const n = input.length;
-  const result = [];
-  let start = 0; // 遍历自增+n
-  while (start < n) {
-    result.push(input.slice(start, start + size));
-    start += size;
-  }
-  return result;
-}
-```
-
-### tree2Arr
-
-```js
 let nestArray = [
   {
     id: 1,
@@ -101,12 +44,8 @@ let nestArray = [
 function getOddNodesByRecursion(tree, res = []) {}
 // 2.循环方式实现
 function getOddNodesByTraversal(tree, res = []) {}
-```
 
-### arr2Tree
-
-```js
-const arr = [
+const flatArr = [
   { id: 1, pid: 0, name: "一级菜单A" },
   { id: 2, pid: 0, name: "一级菜单B" },
   { id: 3, pid: 0, name: "一级菜单C" },
@@ -124,7 +63,6 @@ const treeArr = [
     id: 1,
     pid: 0,
     name: "xxx",
-    children: [{ id: 4, pid: 1, name: "二级菜单A-A", children: [...] }],
+    children: [{ id: 4, pid: 1, name: "二级菜单A-A", children: [] }],
   },
 ];
-```
