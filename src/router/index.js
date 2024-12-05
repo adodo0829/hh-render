@@ -15,7 +15,8 @@ import js from "@/views/study/3.js.vue";
 import browser from "@/views/study/4.browser.vue";
 import network from "@/views/study/5.network.vue";
 import git from "@/views/study/6.git.vue";
-import vuereact from "@/views/study/7.vue-react.vue";
+import vue from "@/views/study/7.vue.vue";
+import react from "@/views/study/7.react.vue";
 import webpack from "@/views/study/8.webpack.vue";
 import ts from "@/views/study/9.ts.vue";
 import optimize from "@/views/study/10.optimize.vue";
@@ -92,9 +93,14 @@ const routes = [
         component: git,
       },
       {
-        path: "/study/vuereact",
-        name: "框架vue-react",
-        component: vuereact,
+        path: "/study/vue",
+        name: "框架vue",
+        component: vue,
+      },
+      {
+        path: "/study/react",
+        name: "框架react",
+        component: react,
       },
       {
         path: "/study/webpack",
