@@ -112,7 +112,31 @@ class MyPlugin {
 5. HMR 运行时替换更新中的模块，如果确定这些模块无法更新，则触发整个页面刷新
     </pre>
 
-    <h3></h3>
+    <h3>vite</h3>
+    <pre>
+# 组成
+1.开发服务器，它基于 原生 ES 模块 提供了 丰富的内建功能，如速度快到惊人的 模块热更新（HMR）
+2.一套构建指令，它使用 Rollup 打包你的代码，并且它是预配置的，可输出用于生产环境的高度优化过的静态资源
+
+npm init vite@latest
+    </pre>
+
+    <h3>Babel</h3>
+    <pre>
+# Babel 的原理
+Babel 的转译过程分为三个阶段:
+1. 解析 Parse : 将代码解析生成抽象语法树（即AST），即词法分析与语法分析的过程
+2. 转换 Transform: 对于 AST 进行变换一系列的操作，Babel 接受得到 AST 并通过 `babel-traverse` 对其进行遍历，在此过程中进行添加、更新及移除等操作
+3. 生成 Generate: 将变换后的 AST 再转换为 JS 代码, 使用到的模块是 `babel-generator`
+
+# 如何写一个 Babel 插件
+Babel 解析成 AST，然后插件更改 AST，最后由 Babel 输出代码
+module.exports = function(babel) {
+  return {
+    visitor: {}
+  }
+}
+    </pre>
   </div>
 </template>
 
