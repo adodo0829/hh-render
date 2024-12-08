@@ -2,18 +2,19 @@
   <div>
     <h3>react</h3>
 
-    <p>react运行过程</p>
+    <p>react核心运行过程</p>
 
     <img
+      style="width: 800px"
       src="https://github.com/adodo0829/blog/blob/master/%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6/React%E6%BA%90%E7%A0%81/images/react-core.png?raw=true"
       alt=""
     />
 
-    <a
-      href="https://github.com/adodo0829/blog/blob/master/%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6/React%E6%BA%90%E7%A0%81/reconciler/fiber.md"
-    >
-      引用 https://github.com/adodo0829/blog/blob/master/%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6/React%E6%BA%90%E7%A0%81/reconciler/fiber.md
-    </a>
+    <p>
+      <a style="color: blue" href="https://7km.top/main/macro-structure"
+        >图解react，便于理解Ta的工作流</a
+      >
+    </p>
 
     <pre>
 React 仅仅负责 View 层渲染, 库级别

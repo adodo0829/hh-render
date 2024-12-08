@@ -1,19 +1,48 @@
 <template>
   <div>
     <section>
-      <h3>循环和递归</h3>
-      <button @click="arrToTree">arrToTree递归</button>
-      <button @click="arrToTree1">arrToTree循环</button>
-      ||
-      <button @click="tree2Arr1">tree2Arr递归</button>
-      <button @click="tree2Arr2">tree2Arr2循环</button>
+      <h3>递归</h3>
+      <p>函数中调用这个函数自身</p>
+      <pre>
+函数的内部语句可以调用这个函数自身，从而发起对函数的一次迭代;
+在新的迭代中，又会执行调用函数自身的语句，从而又产生一次迭代;
+当函数执行到某一次时，不再进行新的迭代，函数被一层一层返回，函数被递归.
+它把一个大型复杂的问题，层层转化为一个与原问题相似的，但规模较小的问题来求解
+      </pre>
+
+      <h3>遍历访问</h3>
+      <p>遍历通常指的是按照某种顺序访问数据结构中的每个元素；</p>
+      <pre>
+
+顺序遍历：对于线性数据结构（如数组、链表），按照元素的顺序一个接一个地访问。
+
+深度优先遍历（DFS）：对于树或图，从根节点开始，尽可能深地搜索树的分支。
+从根节点出发，按照从左到右的顺序，访问其子节点，如果子节点还有子节点，则一直向下访问，直到没有子节点为止。
+从某个顶点出发，首先访问这个顶点，然后找出刚访问这个结点的第一个未被访问的邻结点，然后再以此邻结点为顶点，继续找它的下一个顶点进行访问。重复此步骤，直至所有结点都被访问完为止
+
+广度优先遍历（BFS）：对于树或图，从根节点开始，先访问所有相邻节点，然后逐层向外扩展。
+简单点说就是从根节点出发，一层一层的从上向下访问，同层节点从左往右访问，直到所有的节点都被访问到为止。
+是从某个顶点出发，首先访问这个顶点，然后找出刚访问这个结点所有未被访问的邻结点，访问完后再访问这些结点中第一个邻结点的所有结点，重复此方法，直到所有结点都被访问完为止
+
+二叉树遍历：对于二叉树，有前序遍历（根-左-右）、中序遍历（左-根-右）和后序遍历（左-右-根）三种主要方式。
+图的遍历：对于图，可以使用DFS或BFS来访问图中的所有顶点。
+层次遍历：对于多维数组或矩阵，可以按行或按列逐层访问
+      </pre>
+
+      <h3>排序</h3>
+      <p>
+        将一系列元素（如数字、字符串等）按照一定的顺序（通常是升序或降序）排列的过程
+      </p>
+      <pre>
+1.冒泡排序是一种交换排序，基本思想是：两两比较相邻记录的关键字，如果反序则交换，直到没有反序的记录为止。
+2.快速排序的基本思想是：通过一趟排序将待排记录分割成独立的两部分，其中一部分记录的元素均比另一部分记录的元素小，继而再分别对这两部分记录递归的进行同样的排序操作。
+3.归并排序是利用归并的思想实现的排序方法，该算法采用经典的分治策略（分治法将问题分成一些小的问题然后递归求解，而治的阶段则将分的阶段得到的各答案"修补"在一起，即分而治之)。
+      </pre>
     </section>
   </div>
 </template>
 
 <script>
-import { arr1 } from "@/mock/data1";
-
 export default {
   name: "xxx",
   components: {},
@@ -21,72 +50,6 @@ export default {
     return {};
   },
   mounted() {},
-  methods: {
-    arrToTree() {
-      flatArr2Tree(arr1);
-      function flatArr2Tree(arr) {
-        let rootNodes = [];
-        let childNodes = [];
-        for (let i = 0; i < arr.length; i++) {
-          const node = arr[i];
-          if (node.pid === 0) {
-            rootNodes.push(node);
-          } else {
-            childNodes.push(node);
-          }
-        }
-        // 处理并返回rootNodes
-        function transformToTree(rootNodes, childNodes) {
-          for (let j = 0; j < rootNodes.length; j++) {
-            const pNode = rootNodes[j];
-            for (let k = 0; k < childNodes.length; k++) {
-              const cNode = childNodes[k];
-              if (cNode.pid === pNode.id) {
-                // 递归的条件：再怎么继续找
-                let currChildren = [cNode];
-                // 存在子节点
-                if (Array.isArray(pNode.children)) {
-                  pNode.children.push(cNode);
-                } else {
-                  pNode.children = currChildren;
-                }
-                // 继续深层次找
-                transformToTree(currChildren, childNodes);
-              }
-            }
-          }
-        }
-        // 首次调用
-        transformToTree(rootNodes, childNodes);
-        console.log("rootNodes", rootNodes);
-        return rootNodes;
-      }
-    },
-    arrToTree1() {
-      function formatArr2Tree(arr) {
-        let parentNodes = [];
-        for (let i = 0; i < arr.length; i++) {
-          const node = arr[i];
-          if (node.pid === 0) {
-            parentNodes.push(node);
-          } else {
-            // 直接挂到父节点下，覆写原数组对象
-            const currPNode = arr.find((c) => c.id === node.pid);
-            if (Array.isArray(currPNode.children)) {
-              currPNode.children.push(node);
-            } else {
-              currPNode.children = [node];
-            }
-          }
-        }
-        return parentNodes;
-      }
-
-      let tree = formatArr2Tree(arr1);
-      console.log("tree", tree);
-    },
-    tree2Arr1() {},
-    tree2Arr2() {},
-  },
+  methods: {},
 };
 </script>
