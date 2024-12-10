@@ -47,23 +47,22 @@ function deepTravser1(node) {
   }
   return nodeList;
 }
+
 // 循环的方式
-function deepTravser2(node) {
+function dfs(node) {
   let tempNodes = [];
-  if (node) {
-    let stack = []; // 存放将来要访问的节点
-    stack.push(node);
-    while (stack.length) {
-      let currNode = stack.pop(); // 正在访问的节点
-      tempNodes.push(currNode);
-      // 其余节点
-      let childNodes = currNode.children;
-      // for (let i = 0; i < childNodes.length; i++) {
-      // 访问顺序不一样而已，先左侧子节点 还是 右侧子节点
-      for (let i = childNodes.length - 1; i >= 0; i--) {
-        const cNode = childNodes[i];
-        stack.push(cNode);
-      }
+  let stack = []; // 存放将来要访问的节点
+  stack.push(node);
+  while (stack.length) {
+    let currNode = stack.pop(); // 正在访问的节点
+    tempNodes.push(currNode);
+    // 其余节点
+    let childNodes = currNode.children;
+    // for (let i = 0; i < childNodes.length; i++) {
+    // 访问顺序不一样而已，先左侧子节点 还是 右侧子节点
+    for (let i = childNodes.length - 1; i >= 0; i--) {
+      const cNode = childNodes[i];
+      stack.push(cNode);
     }
   }
 
@@ -89,24 +88,39 @@ function deepTravser2(node) {
 //   return tempNodes;
 // }
 
-function wideTravser(node) {
-  let nodeList = [];
-  let i = 0;
+const graph = {
+  A: ["B", "C"],
+  B: ["A", "D", "E"],
+  C: ["A", "F"],
+  D: ["B"],
+  E: ["B", "F"],
+  F: ["C", "E"],
+};
 
-  while (node) {
-    nodeList.push(node);
-    node = nodeList[i];
-    let childNodes = node.children;
-    for (let j = 0; j < childNodes.length; j++) {
-      const ele = childNodes[j];
-      nodeList.push(ele);
+// 把节点都放到队列里依次处理
+function bfs(g, startNode) {
+  const visited = new Set(); // 用于记录已访问的节点
+  const queue = [startNode]; // 初始化队列，将起始节点加入队列
+
+  while (queue.length) {
+    const currentNode = queue.shift(); // 从队列中取出一个节点
+
+    if (!visited.has(currentNode)) {
+      visited.add(currentNode); // 标记为已访问
+      console.log(currentNode); // 处理当前节点，例如打印节点
+
+      // 将当前节点的所有邻居节点加入队列
+      const neighbors = g[currentNode] || [];
+      for (const neighbor of neighbors) {
+        if (!visited.has(neighbor)) {
+          queue.push(neighbor);
+        }
+      }
     }
-
-    i++;
   }
-
-  return nodeList;
 }
+
+console.log("bfs", bfs(graph, "A"));
 
 // 深度遍历广度遍历的区别？
 // 1.深度优先不需要记住所有的节点, 所以占用空间小, 而广度优先需要先记录所有的节点占用空间大;

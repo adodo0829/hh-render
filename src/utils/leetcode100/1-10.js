@@ -6,7 +6,8 @@ var getIntersectionNode = function (headA, headB) {
     return null;
   }
 
-  let hashMap = new Map();
+  let hashMap = new Map(); // 散列表查找
+
   let tempA = headA;
   while (tempA) {
     hashMap.set(tempA, 1);
@@ -21,3 +22,6 @@ var getIntersectionNode = function (headA, headB) {
     tempB = tempB.next;
   }
 };
+
+
+
