@@ -117,7 +117,9 @@ console.log(instance1 === instance2); // 输出：true
 </template>
 
 <script>
-import { SingleMode, Customer, Subject, EventEmitter } from "@/utils/design";
+import { EventEmitter } from "@/utils/designMode/emitter";
+import { SingleMode } from "@/utils/designMode/single";
+import { Customer, Subject } from "@/utils/designMode/observer";
 
 export default {
   name: "xxx",
