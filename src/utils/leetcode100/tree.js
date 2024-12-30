@@ -215,3 +215,44 @@ var maxDepth = function (root) {
 
   return depth;
 };
+
+// 给你两棵二叉树： root1 和 root2； 进行合并
+// 同一位置都存在，节点val相加；不存在占位即可
+var mergeTrees = function (root1, root2) {
+  // 同层遍历，层序遍历
+  /**
+   * 怎么操作，构造一颗新树，把同位置的节点放入队列
+   * 节点成对，节点有无
+   */
+  if (root1 === null) {
+    return root2;
+  }
+  if (root2 === null) {
+    return root1;
+  }
+  let queue = [root1, root2];
+  while (queue.length) {
+    // 一起出队列,一下出俩
+    let node1 = queue.shift();
+    let node2 = queue.shift();
+    // 以root1为基准来操作，最后返回root1
+    node1.val += node2.val;
+    // 下一层节点, 分场景处理
+    if (node1.left && node2.left) {
+      // 左子树都存在，一起入
+      queue.push(node1.left);
+      queue.push(node2.left);
+    }
+    if (node1.right && node2.right) {
+      queue.push(node1.right);
+      queue.push(node2.right);
+    }
+    if (node1.left === null && node2.left) {
+      node1.left = node2.left;
+    }
+    if (node1.right === null && node2.right) {
+      node1.right = node2.right;
+    }
+  }
+  return root1;
+};

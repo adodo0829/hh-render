@@ -62,3 +62,24 @@ var isPalindrome = function (head) {
 
   return true;
 };
+
+/**
+ * 给你一个链表的头节点 head ，判断链表中是否有环
+ */
+var hasCycle = function (head) {
+  if (head === null) {
+    return false;
+  }
+  // 有环必然是next指向了之前的节点
+  let set = new Set();
+  while (head) {
+    set.add(head);
+    let nextNode = head.next;
+    if (set.has(nextNode)) {
+      return true;
+    }
+    head = nextNode;
+  }
+  return false;
+  // 方法2：快慢指针
+};
