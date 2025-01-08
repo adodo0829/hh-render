@@ -83,3 +83,37 @@ var hasCycle = function (head) {
   return false;
   // 方法2：快慢指针
 };
+
+/**
+ * 给你两个 非空 的链表，表示两个非负的整数。它们每位数字都是按照 逆序 的方式存储的，并且每个节点只能存储 一位 数字。
+ * 输入：l1 = [2,4,3], l2 = [5,6,4],输出：[7,0,8]
+ * 输入：l1 = [9,9,9,9,9,9,9], l2 = [9,9,9,9],输出：[8,9,9,9,0,0,0,1]
+ */
+var addTwoNumbers = function (l1, l2) {
+  // 保留进位符1，往后加，最后进位要创建新节点
+  // 创建一个哨兵节点（temp node），当成初始的「空链表」。
+  // 循环结束后，哨兵节点的下一个节点就是最终要返回的链表头节点
+  let tempNode = new ListNode();
+  let curr = tempNode;
+  let sum = 0;
+  // 遍历链表
+  while (l1 || l2 || sum) {
+    // 如果l1有值
+    if (l1) {
+      sum = sum + l1.val;
+      l1 = l1.next;
+    }
+    // 如果l2有值
+    if (l2) {
+      sum = sum + l2.val;
+      l2 = l2.next;
+    }
+    // 计算本次的总和，个位数作为新链表节点的值
+    let nodeVal = sum % 10; // 取新节点值
+    let newNode = new ListNode(nodeVal);
+    curr.next = newNode;
+    curr = curr.next;
+    sum = Math.floor(sum / 10); // 取进位值
+  }
+  return tempNode.next;
+};
