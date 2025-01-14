@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 20px 1fr;
+            /* 两列靠边，中间固定20px */
+            grid-template-rows: 1fr 20px 1fr;
+            /* 三行，中间固定20px */
+            gap: 20px;
+            /* 行列间距为0 */
+            width: 100%;
+            height: 100%;
+            /* 上下左右外边距各20px */
+            box-sizing: border-box;
+        }
+
+        .item {
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+        }
+
+        .txt {
+            margin-top: 20px;
+            width: 300px;
+            height: 65px;
+            border: 1px solid black;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+            overflow: hidden;
+        }
+
+        .txt::before {
+            content: '';
+            float: right;
+            width: 0px;
+            height: 50px;
+            background: red
+        }
+
+        .btn {
+            float: right;
+            clear: both;
+            transform: translateY(-10px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="item">1</div>
+        <div class="item">2</div>
+        <div class="item">3</div>
+        <div class="item">4</div>
+        <div class="item">5</div>
+        <div class="item">6</div>
+        <div class="item">7</div>
+        <div class="item">8</div>
+        <div class="item">9</div>
+    </div>
+
+    <div class="txt">
+        <button class="btn">展开</button>
+        据媒体报道，今年五一假期前，39岁的北京人丁先生去河南鹤壁，过户花2万块新买的房子。这是他在当地买的第12套房子。
+        从2020年10月开始，丁先生在半个月的时间内在鹤壁买了8套房子，一共花了10万元。
+        其中最便宜的一套房款1000元，加中介费1000元。总共才2000块。
+    </div>
+</body>
+
+</html>
