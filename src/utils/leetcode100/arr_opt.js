@@ -54,7 +54,30 @@ var countBits = function (n) {
 };
 
 /**
- * 给定一个未排序的整数数组 nums ，找出数字连续的最长序列（不要求序列元素在原数组中连续）的长度。
- * 时间复杂度为 O(n)
+ * 盛最多水的容器
+ * 给定一个长度为 n 的整数数组 height 。
+ * 有 n 条垂线，第 i 条线的两个端点是 (i, 0) 和 (i, height[i])
+ * 找出其中的两条线，使得它们与 x 轴共同构成的容器可以容纳最多的水。
+ * 返回容器可以储存的最大水量
  */
 
+var maxArea = function (height) {
+  let maxArea = 0;
+  // maxArea = minY * (maxX - minX)
+  // 两个因子变量：柱子高度 和 柱子间距
+  let [i, j] = [0, height.length - 1];
+  while (i < j) {
+    let h1 = height[i];
+    let h2 = height[j];
+    let minH = Math.min(h1, h2);
+    let currArea = minH * (j - i);
+    maxArea = Math.max(currArea, maxArea);
+    // 移动指针，谁的高度小就移动谁，目的是找大的高度
+    if (h1 < h2) {
+      i++;
+    } else {
+      j--;
+    }
+  }
+  return maxArea;
+};
