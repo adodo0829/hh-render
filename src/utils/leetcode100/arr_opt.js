@@ -81,3 +81,48 @@ var maxArea = function (height) {
   }
   return maxArea;
 };
+
+/**
+ * 给你一个整数数组 nums ，判断是否存在三元组 [nums[i], nums[j], nums[k]] 满足 i != j、i != k 且 j != k ，
+ * 同时还满足 nums[i] + nums[j] + nums[k] == 0 。请你返回所有和为 0 且不重复的三元组
+ */
+
+var threeSum = function (nums) {
+  let result = [];
+  if (!nums || nums.length < 3) {
+    return result;
+  }
+  nums.sort((a, b) => a - b); // 从小到大排序
+  for (let i = 0; i < nums.length; i++) {
+    if (nums[i] > 0) {
+      break;
+    }
+    if (i && nums[i] === nums[i - 1]) {
+      // 重复值跳过
+      continue;
+    }
+    let [l, r] = [i + 1, nums.length - 1];
+    while (l < r) {
+      const target = nums[i] + nums[l] + nums[r];
+      if (target === 0) {
+        let tempAns = [nums[i], nums[l], nums[r]]
+        result.push(tempAns);
+        // 需要对结果集去重, 过滤重复值指针
+        while (l < r && nums[l] === nums[l + 1]) {
+          l++;
+        }
+        while (l < r && nums[r] === nums[r - 1]) {
+          r--;
+        }
+        l++;
+        r--;
+      } else if (target < 0) {
+        l++;
+      } else {
+        r--;
+      }
+    }
+  }
+
+  return result;
+};
