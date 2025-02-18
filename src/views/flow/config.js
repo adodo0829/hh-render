@@ -16,6 +16,90 @@ export const NodeTypeList = [
   },
 ];
 
+// 连接桩
+const portR = 4;
+
+const ports = {
+  // 连接桩分组
+  groups: {
+    top: {
+      position: "top",
+      attrs: {
+        circle: {
+          r: portR,
+          magnet: true,
+          stroke: "#5F95FF",
+          strokeWidth: 1,
+          fill: "#fff",
+          style: {
+            visibility: "hidden",
+          },
+        },
+      },
+    },
+    right: {
+      position: "right",
+      attrs: {
+        circle: {
+          r: portR,
+          magnet: true,
+          stroke: "#5F95FF",
+          strokeWidth: 1,
+          fill: "#fff",
+          style: {
+            visibility: "hidden",
+          },
+        },
+      },
+    },
+    bottom: {
+      position: "bottom",
+      attrs: {
+        circle: {
+          r: portR,
+          magnet: true,
+          stroke: "#5F95FF",
+          strokeWidth: 1,
+          fill: "#fff",
+          style: {
+            visibility: "hidden",
+          },
+        },
+      },
+    },
+    left: {
+      position: "left",
+      attrs: {
+        circle: {
+          r: portR,
+          magnet: true,
+          stroke: "#5F95FF",
+          strokeWidth: 1,
+          fill: "#fff",
+          style: {
+            visibility: "hidden",
+          },
+        },
+      },
+    },
+  },
+  // 连接桩定义
+  items: [
+    {
+      group: "top",
+    },
+    {
+      group: "right",
+    },
+    {
+      group: "bottom",
+    },
+    {
+      group: "left",
+    },
+  ],
+};
+
 export const BussinessNodeConf = {
   width: 200,
   height: 60,
@@ -32,7 +116,7 @@ export const BussinessNodeConf = {
       fill: "#0062ff",
     },
   },
-  //   ports: { ...ports },
+  ports: { ...ports },
 };
 export const BranchNodeConf = {
   label: "条件节点",
@@ -50,7 +134,17 @@ export const BranchNodeConf = {
       fill: "#ffac00",
     },
   },
-  //   ports: { ...ports },
+  ports: {
+    ...ports,
+    items: [
+      {
+        group: "top",
+      },
+      {
+        group: "bottom",
+      },
+    ],
+  },
 };
 export const DelayNodeConf = {
   label: "延迟节点",
@@ -68,5 +162,15 @@ export const DelayNodeConf = {
       fill: "#905fe9",
     },
   },
-  //   ports: { ...ports },
+  ports: {
+    ...ports,
+    items: [
+      {
+        group: "top",
+      },
+      {
+        group: "bottom",
+      },
+    ],
+  },
 };

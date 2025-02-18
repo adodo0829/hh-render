@@ -2,7 +2,7 @@
   <div class="flow">
     <!-- 物料节点区 -->
     <div class="left">
-      <h3>节点区</h3>
+      <h3>节点物料区</h3>
       <div class="node-wrapper" @dragstart="onNodeDragStart">
         <div
           draggable
@@ -27,23 +27,24 @@
 
     <!-- 元素属性区 -->
     <div class="right">
-      <h3>属性区</h3>
+      <h3>属性编辑区</h3>
     </div>
   </div>
 </template>
 
 <script>
-import { Graph } from "@antv/x6";
+import { Graph, Shape } from "@antv/x6";
 import {
   NodeTypeList,
   BussinessNodeConf,
   BranchNodeConf,
   DelayNodeConf,
 } from "./config";
+import GraphUtil from "./utils";
 
-Graph.registerNode("bussiness", BussinessNodeConf);
-Graph.registerNode("branch", BranchNodeConf);
-Graph.registerNode("delay", DelayNodeConf);
+Graph.registerNode("bussiness", BussinessNodeConf, true);
+Graph.registerNode("branch", BranchNodeConf, true);
+Graph.registerNode("delay", DelayNodeConf, true);
 
 let graphEngine = null;
 
@@ -88,10 +89,56 @@ export default {
           enabled: true,
           factor: 1.1,
         },
+        connecting: {
+          allowBlank: false,
+          allowEdge: false,
+          allowMulti: false,
+          validateConnection(obj) {
+            return obj.targetPort && obj.targetPort !== obj.sourcePort;
+          },
+          router: "manhattan",
+          connector: {
+            name: "rounded",
+            args: {
+              radius: 8,
+            },
+          },
+          anchor: "center",
+          connectionPoint: "anchor",
+          snap: {
+            radius: 10,
+          },
+          createEdge() {
+            return new Shape.Edge({
+              attrs: {
+                line: {
+                  stroke: "#A2B1C3",
+                  strokeWidth: 2,
+                  targetMarker: {
+                    name: "block",
+                    width: 8,
+                    height: 8,
+                  },
+                },
+              },
+              zIndex: 0,
+            });
+          },
+        },
       };
       const graph = new Graph(options);
+      // add event system
+      graph.on("node:mouseenter", () => {
+        const container = this.$refs.canvas;
+        const ports = container.querySelectorAll(".x6-port-body");
+        GraphUtil.showPorts(ports, true);
+      });
+      graph.on("node:mouseleave", () => {
+        const container = this.$refs.canvas;
+        const ports = container.querySelectorAll(".x6-port-body");
+        GraphUtil.showPorts(ports, false);
+      });
       graphEngine = graph;
-      console.log("graphEngine", graphEngine);
       graph.centerContent();
     },
 
@@ -133,6 +180,8 @@ export default {
         ...coverProps,
         shape: nodeType,
       });
+
+      console.log("gIns", graphEngine);
     },
   },
 };
