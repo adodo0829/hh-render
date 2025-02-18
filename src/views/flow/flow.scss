@@ -1,0 +1,59 @@
+.flow {
+  position: relative;
+  height: 100%;
+
+  .left {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 160px;
+    text-align: center;
+    height: 100%;
+    padding-left: 10px;
+    border-right: 1px solid #ccc;
+    .drag-node {
+      width: 140px;
+      height: 40px;
+      border: 1px solid #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 20px;
+      &:hover {
+        cursor: move;
+      }
+      &.bussiness {
+        color: #0062ff;
+      }
+      &.branch {
+        color: #ffac00;
+      }
+      &.delay {
+        color: #905fe9;
+      }
+    }
+  }
+
+  .right {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 240px;
+    height: 100%;
+    text-align: center;
+    border-left: 1px solid #ccc;
+  }
+
+  .center {
+    width: calc(100% - 400px);
+    height: 100%;
+    // position: absolute;
+    margin-left: 160px;
+    margin-right: 240px;
+
+    main {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}

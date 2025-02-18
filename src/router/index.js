@@ -7,6 +7,7 @@ import Coord from "@/views/Coord.vue";
 import Vector from "@/views/Vector.vue";
 import Matrix from "@/views/Matrix.vue";
 import TEST_GL_API from "@/views/TEST_GL_API.vue";
+import Flow from "@/views/flow/index.vue";
 
 import study from "@/views/study/index.vue";
 import html from "@/views/study/1.html.vue";
@@ -55,6 +56,11 @@ const routes = [
     path: "/TEST_GL_API",
     name: "TEST_GL_API",
     component: TEST_GL_API,
+  },
+  {
+    path: "/Flow",
+    name: "Flow",
+    component: Flow,
   },
   {
     path: "/study",
