@@ -9,7 +9,11 @@
   },
   "dependencies": {
     "@antv/x6": "2.18.1",
-    "@antv/x6-plugin-dnd": "^2.1.1",
+    "@antv/x6-plugin-clipboard": "^2.1.6",
+    "@antv/x6-plugin-export": "^2.1.6",
+    "@antv/x6-plugin-keyboard": "^2.2.3",
+    "@antv/x6-plugin-selection": "^2.2.2",
+    "@antv/x6-plugin-snapline": "^2.1.7",
     "core-js": "^3.6.5",
     "tiny-sdf": "1.0.2",
     "vue": "^2.6.11",

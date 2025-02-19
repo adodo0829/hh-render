@@ -33,7 +33,12 @@
 </template>
 
 <script>
-import { Graph, Shape } from "@antv/x6";
+import { Graph } from "@antv/x6";
+import { Snapline } from "@antv/x6-plugin-snapline";
+import { Selection } from "@antv/x6-plugin-selection";
+import { Clipboard } from "@antv/x6-plugin-clipboard";
+import { Keyboard } from "@antv/x6-plugin-keyboard";
+
 import {
   NodeTypeList,
   BussinessNodeConf,
@@ -41,6 +46,7 @@ import {
   DelayNodeConf,
 } from "./config";
 import GraphUtil from "./utils";
+import { getGraphOptions } from "./flow";
 
 Graph.registerNode("bussiness", BussinessNodeConf, true);
 Graph.registerNode("branch", BranchNodeConf, true);
@@ -68,66 +74,61 @@ export default {
   methods: {
     initGraph() {
       if (graphEngine) graphEngine.dispose();
+
       const domContainer = this.$refs.canvas;
-      const options = {
+      const options = getGraphOptions({
         container: domContainer,
-        autoResize: true,
-        background: {
-          color: "#F2F7FA",
-        },
-        grid: {
-          visible: true,
-        },
-        scaling: {
-          min: 0.5,
-          max: 2,
-        },
-        panning: {
-          enabled: true,
-        },
-        mousewheel: {
-          enabled: true,
-          factor: 1.1,
-        },
-        connecting: {
-          allowBlank: false,
-          allowEdge: false,
-          allowMulti: false,
-          validateConnection(obj) {
-            return obj.targetPort && obj.targetPort !== obj.sourcePort;
-          },
-          router: "manhattan",
-          connector: {
-            name: "rounded",
-            args: {
-              radius: 8,
-            },
-          },
-          anchor: "center",
-          connectionPoint: "anchor",
-          snap: {
-            radius: 10,
-          },
-          createEdge() {
-            return new Shape.Edge({
-              attrs: {
-                line: {
-                  stroke: "#A2B1C3",
-                  strokeWidth: 2,
-                  targetMarker: {
-                    name: "block",
-                    width: 8,
-                    height: 8,
-                  },
-                },
-              },
-              zIndex: 0,
-            });
-          },
-        },
-      };
+      });
       const graph = new Graph(options);
-      // add event system
+      graph.use(
+        new Snapline({
+          enabled: true,
+        })
+      );
+      graph.use(
+        new Selection({
+          enabled: true,
+          multiple: false,
+          showNodeSelectionBox: true,
+          pointerEvents: "none",
+        })
+      );
+      graph.use(new Clipboard());
+      graph.use(
+        new Keyboard({
+          enabled: true,
+        })
+      );
+      graph.bindKey(["meta+c", "ctrl+c"], () => {
+        const cells = graph.getSelectedCells();
+        if (cells.length) {
+          const cell = cells[0];
+          const { shape } = cell;
+          if (shape !== "edge") {
+            graph.copy(cells);
+          }
+        }
+        return false;
+      });
+      graph.bindKey(["meta+v", "ctrl+v"], () => {
+        if (!graph.isClipboardEmpty()) {
+          const cells = graph.paste({ offset: 32 });
+          graph.cleanSelection();
+          graph.select(cells);
+        }
+        return false;
+      });
+      graph.bindKey("backspace", () => {
+        const cells = graph.getSelectedCells();
+        if (cells.length) {
+          graph.removeCells(cells);
+        }
+      });
+
+      graphEngine = graph;
+      graph.centerContent();
+
+      // === add event system ===
       graph.on("node:mouseenter", () => {
         const container = this.$refs.canvas;
         const ports = container.querySelectorAll(".x6-port-body");
@@ -138,8 +139,59 @@ export default {
         const ports = container.querySelectorAll(".x6-port-body");
         GraphUtil.showPorts(ports, false);
       });
-      graphEngine = graph;
-      graph.centerContent();
+      graph.on("node:click", () => {
+        graph.getEdges().forEach((e) => {
+          e.attr("line/stroke", "#A2B1C3");
+        });
+      });
+      // 监听边的点击事件
+      graph.on("edge:click", ({ edge }) => {
+        graph.getEdges().forEach((e) => {
+          e.attr("line/stroke", "#A2B1C3");
+        });
+        edge.attr("line/stroke", "#0062ff");
+      });
+      graph.on("blank:click", () => {
+        graph.getEdges().forEach((e) => {
+          e.attr("line/stroke", "#A2B1C3");
+        });
+      });
+      // 为条件边添加标签
+      graph.on("edge:connected", ({ edge }) => {
+        const sourceNode = edge.getSourceNode();
+        console.log("edge:connected sourceNode", sourceNode);
+        if (sourceNode.shape === "branch") {
+          const branchNodeEdges = graph.getOutgoingEdges(sourceNode);
+          if (branchNodeEdges.length === 1) {
+            edge.setData({ conditionInput: 1 });
+          } else if (branchNodeEdges.length === 2) {
+            const dataEdge = branchNodeEdges.filter((edge) => !!edge.data)[0];
+            const noDataEdge = branchNodeEdges.filter((edge) => !edge.data)[0];
+            if (dataEdge) {
+              const { conditionInput } = dataEdge.data;
+              noDataEdge.setData({
+                conditionInput: conditionInput === 1 ? 0 : 1,
+              });
+            }
+          }
+
+          branchNodeEdges.forEach((item) => {
+            const { data } = item;
+            const { conditionInput } = data;
+            edge.setLabels({
+              attrs: {
+                label: {
+                  text: conditionInput ? " 是 " : " 否 ",
+                  fill: conditionInput ? "#00c172" : "red",
+                },
+              },
+              position: {
+                distance: 0.5,
+              },
+            });
+          });
+        }
+      });
     },
 
     onNodeTypClick(e) {
@@ -164,14 +216,14 @@ export default {
       e.preventDefault();
       e.stopPropagation();
       const nodeType = e.dataTransfer.getData("NodeType");
-      console.log("rxy", this.nodeRx, this.nodeRy);
+      // console.log("rxy", this.nodeRx, this.nodeRy);
       const dx = Math.ceil(e.clientX - this.nodeRx);
       const dy = Math.ceil(e.clientY - this.nodeRy);
-      console.log("dxy", dx, dy);
+      // console.log("dxy", dx, dy);
       const p = graphEngine.clientToLocal(dx, dy);
-      console.log("gxy", p.x, p.y);
+      // console.log("gxy", p.x, p.y);
       const coverProps = {
-        id: `${nodeType}_${Math.random()}`,
+        id: `node_${nodeType}_${Math.random()}`,
         x: p.x,
         y: p.y,
         // todo：添加业务data
@@ -180,8 +232,6 @@ export default {
         ...coverProps,
         shape: nodeType,
       });
-
-      console.log("gIns", graphEngine);
     },
   },
 };
@@ -189,4 +239,11 @@ export default {
 
 <style lang="scss" scoped>
 @import "./flow.scss";
+</style>
+
+<style lang="scss">
+// reset x6
+.x6-widget-selection-box {
+  border: 2px dashed #0062ff;
+}
 </style>
