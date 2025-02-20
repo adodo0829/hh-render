@@ -28,6 +28,10 @@
     <!-- 元素属性区 -->
     <div class="right">
       <h3>属性编辑区</h3>
+      <div class="flow-props" v-show="flowInfoVisible">
+        <FlowProps />
+      </div>
+      <div class="node-props" v-show="nodeInfoVisible">节点属性</div>
     </div>
   </div>
 </template>
@@ -47,6 +51,7 @@ import {
 } from "./config";
 import GraphUtil from "./utils";
 import { getGraphOptions } from "./flow";
+import FlowProps from "./flowProps.vue";
 
 Graph.registerNode("bussiness", BussinessNodeConf, true);
 Graph.registerNode("branch", BranchNodeConf, true);
@@ -56,11 +61,15 @@ let graphEngine = null;
 
 export default {
   name: "xxx",
-  components: {},
+  components: {
+    FlowProps,
+  },
   data() {
     return {
       nodeRx: 0,
       nodeRy: 0,
+      flowInfoVisible: true,
+      nodeInfoVisible: false,
     };
   },
   computed: {
@@ -191,6 +200,11 @@ export default {
             });
           });
         }
+      });
+
+      graph.on("node:selected", ({ node }) => {
+        console.log("node:selected", node);
+        // 获取数据，回填属性区
       });
     },
 

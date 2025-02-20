@@ -40,8 +40,10 @@
     top: 0;
     width: 240px;
     height: 100%;
-    text-align: center;
     border-left: 1px solid #ccc;
+    h3 {
+      text-align: center;
+    }
   }
 
   .center {
