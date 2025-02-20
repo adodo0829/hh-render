@@ -16,6 +16,20 @@ export const NodeTypeList = [
   },
 ];
 
+export const NodeCodeMap = NodeTypeList.reduce((acc, cur) => {
+  return {
+    ...acc,
+    [cur.code]: cur.type,
+  };
+}, {});
+
+export const NodeTypeMap = NodeTypeList.reduce((acc, cur) => {
+  return {
+    ...acc,
+    [cur.type]: cur.code,
+  };
+}, {});
+
 // 连接桩
 const portR = 4;
 
@@ -173,4 +187,21 @@ export const DelayNodeConf = {
       },
     ],
   },
+};
+
+export const emptyNodeProps = {
+  // 业务属性
+  nodeType: undefined, // 10:bussiness, 20:branch, 30:delay
+  nodeId: undefined,
+  nodeAlias: "",
+  executeParentStoresFlag: 0,
+  executeThisStoresFlag: 0,
+  ruleId: undefined,
+  remark: "",
+  // 位置属性: 在提交的时候赋值
+  pos: "", // node唯一key
+  fromNodePosList: [], // source nodes
+  toNodePosList: [], // target nodes
+  toNoPos: undefined, // 当前节点为条件节点时有值
+  toYesPos: undefined, // 当前节点为条件节点时有值
 };

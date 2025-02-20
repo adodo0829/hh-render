@@ -4,6 +4,11 @@ function showPorts(ports, show) {
   }
 }
 
+function genNodeId(prefix) {
+  return `${prefix}_${Math.random()}`;
+}
+
 export default {
   showPorts,
+  genNodeId,
 };

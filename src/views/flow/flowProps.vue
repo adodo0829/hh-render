@@ -1,6 +1,6 @@
 <template>
   <div class="props">
-    <p>流程信息属性</p>
+    <h4>流程基础信息</h4>
     <div class="row">
       <span>功能模块:</span>
       <span>入库</span>

@@ -19,7 +19,7 @@ export function getGraphOptions(opt) {
     },
     mousewheel: {
       enabled: true,
-      factor: 1.1,
+      factor: 1.05,
     },
     connecting: {
       allowBlank: false,

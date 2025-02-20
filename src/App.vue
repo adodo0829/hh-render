@@ -43,7 +43,7 @@ export default {
   display: flex;
   #nav {
     height: 100vh;
-    width: 200px;
+    width: 160px;
     overflow-y: auto;
     border-right: 1px solid #ccc;
     a {
