@@ -31,7 +31,9 @@
       <div class="flow-props" v-show="flowInfoVisible">
         <FlowProps />
       </div>
-      <div class="node-props" v-show="nodeInfoVisible">节点属性</div>
+      <div class="node-props" v-show="nodeInfoVisible">
+        <p>节点属性配置</p>
+      </div>
     </div>
   </div>
 </template>
