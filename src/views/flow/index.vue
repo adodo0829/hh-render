@@ -40,7 +40,7 @@
           label-width="100px"
         >
           <el-form-item label="节点类型" prop="nodeType">
-            <span>{{ nodeForm.nodeType }}</span>
+            <span>{{ nodeType2NameMap[nodeForm.nodeType] }}</span>
           </el-form-item>
 
           <el-form-item label="节点名称" prop="nodeId">
@@ -104,6 +104,7 @@ import {
   NodeTypeList,
   NodeCodeMap,
   NodeTypeMap,
+  NodeType2NameMap,
   BussinessNodeConf,
   BranchNodeConf,
   DelayNodeConf,
@@ -148,11 +149,15 @@ export default {
         ruleId: undefined,
         remark: "",
       },
+      currCellId: "",
     };
   },
   computed: {
     nodeTypeList() {
       return NodeTypeList;
+    },
+    nodeType2NameMap() {
+      return NodeType2NameMap;
     },
   },
   mounted() {
@@ -349,7 +354,12 @@ export default {
     onNodeEditSubmit() {
       this.$refs["nodeForm"].validate((valid) => {
         if (!valid) return false;
-        console.log("submit!");
+        console.log("submit!", this.nodeForm, this.currCellId);
+        if (this.currCellId) {
+          let currNode = graphEngine.getCellById(this.currCellId);
+          currNode.updateData(this.nodeForm);
+          console.log("updateData", currNode);
+        }
       });
     },
 
@@ -377,6 +387,7 @@ export default {
         this.flowInfoVisible = false;
       }
       console.log("node selected", nodeIns);
+      this.currCellId = nodeIns.id;
       const graphNodeData = nodeIns.getData();
       console.log(graphNodeData);
 
@@ -391,26 +402,6 @@ export default {
 <style lang="scss" scoped>
 @import "./flow.scss";
 </style>
-
 <style lang="scss">
-// reset x6
-@keyframes moveBorder {
-  0% {
-    border-spacing: 0px;
-  }
-  50% {
-    border-spacing: 10px;
-  }
-  100% {
-    border-spacing: 0px;
-  }
-}
-
-.x6-widget-selection-box {
-  border: none;
-  // border: 2px dashed #0062ff;
-  // border-spacing: 20px;
-  background-image: url("~@/assets/border.svg");
-  background-repeat: no-repeat;
-}
+@import "./resetX6.scss";
 </style>

@@ -30,6 +30,13 @@ export const NodeTypeMap = NodeTypeList.reduce((acc, cur) => {
   };
 }, {});
 
+export const NodeType2NameMap = NodeTypeList.reduce((acc, cur) => {
+  return {
+    ...acc,
+    [cur.type]: cur.name,
+  };
+}, {});
+
 // 连接桩
 const portR = 4;
 
@@ -198,10 +205,10 @@ export const emptyNodeProps = {
   executeThisStoresFlag: 0,
   ruleId: undefined,
   remark: "",
-  // 位置属性: 在提交的时候赋值
   pos: "", // node唯一key
-  fromNodePosList: [], // source nodes
-  toNodePosList: [], // target nodes
-  toNoPos: undefined, // 当前节点为条件节点时有值
-  toYesPos: undefined, // 当前节点为条件节点时有值
+  // 位置属性: 在最后提交的时候赋值
+  // fromNodePosList: [], // source nodes
+  // toNodePosList: [], // target nodes
+  // toNoPos: undefined, // 当前节点为条件节点时有值
+  // toYesPos: undefined, // 当前节点为条件节点时有值
 };
