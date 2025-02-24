@@ -409,7 +409,8 @@
         "executeParentStoresFlag": 0,
         "executeThisStoresFlag": 0,
         "remark": "",
-        "pos": "bussiness_0.18334666973022973"
+        "pos": "bussiness_0.18334666973022973",
+        "status": "doing"
       },
       "zIndex": 5
     },
@@ -487,7 +488,8 @@
         "executeParentStoresFlag": 0,
         "executeThisStoresFlag": 0,
         "remark": "",
-        "pos": "bussiness_0.3709107497745663"
+        "pos": "bussiness_0.3709107497745663",
+        "status": "done"
       },
       "zIndex": 6
     }
