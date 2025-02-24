@@ -14,6 +14,16 @@ export const NodeTypeList = [
     code: "delay",
     name: "延迟节点",
   },
+  {
+    type: 40,
+    code: "start",
+    name: "开始节点",
+  },
+  {
+    type: 50,
+    code: "end",
+    name: "结束节点",
+  },
 ];
 
 export const NodeCodeMap = NodeTypeList.reduce((acc, cur) => {
@@ -191,6 +201,62 @@ export const DelayNodeConf = {
       },
       {
         group: "bottom",
+      },
+    ],
+  },
+};
+
+export const StartNodeConf = {
+  width: 120,
+  height: 48,
+  label: "开始节点",
+  inherit: "rect",
+  attrs: {
+    body: {
+      strokeWidth: 1,
+      stroke: "#d8d8d8",
+      fill: "#FFFFFF",
+      rx: 24,
+      ry: 24,
+    },
+    text: {
+      fontSize: 14,
+      fill: "#000000",
+    },
+  },
+  ports: {
+    ...ports,
+    items: [
+      {
+        group: "bottom",
+      },
+    ],
+  },
+};
+
+export const EndNodeConf = {
+  width: 120,
+  height: 48,
+  label: "结束节点",
+  inherit: "rect",
+  attrs: {
+    body: {
+      strokeWidth: 1,
+      stroke: "#d8d8d8",
+      fill: "#FFFFFF",
+      rx: 20,
+      ry: 26,
+    },
+    text: {
+      fontSize: 14,
+      fill: "#000000",
+    },
+  },
+  ports: {
+    ...ports,
+    items: [
+      {
+        group: "top",
       },
     ],
   },

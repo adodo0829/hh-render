@@ -48,7 +48,7 @@ export function getGraphOptions(opt) {
       anchor: "center",
       connectionPoint: "anchor",
       snap: {
-        radius: 10,
+        radius: 20,
       },
       createEdge() {
         return new Shape.Edge({

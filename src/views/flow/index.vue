@@ -16,6 +16,10 @@
           {{ item.name }}
         </div>
       </div>
+
+      <el-button class="confirm-btn" @click="handleDone" type="primary"
+        >提交流程图</el-button
+      >
     </div>
 
     <!-- 画布渲染区 -->
@@ -33,6 +37,7 @@
       </div>
       <div class="node-props" v-show="nodeInfoVisible">
         <h4>节点属性配置</h4>
+
         <el-form
           ref="nodeForm"
           :model="nodeForm"
@@ -43,7 +48,11 @@
             <span>{{ nodeType2NameMap[nodeForm.nodeType] }}</span>
           </el-form-item>
 
-          <el-form-item label="节点名称" prop="nodeId">
+          <el-form-item
+            v-show="isBranchOrDelay || isBussiness"
+            label="节点名称"
+            prop="nodeId"
+          >
             <el-select v-model="nodeForm.nodeId" placeholder="请选择">
               <el-option label="功能节点1" value="111"></el-option>
               <el-option label="功能节点2" value="222"></el-option>
@@ -51,11 +60,19 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="节点别名" prop="nodeAlias">
+          <el-form-item
+            v-show="isBranchOrDelay || isBussiness"
+            label="节点别名"
+            prop="nodeAlias"
+          >
             <el-input v-model.trim="nodeForm.nodeAlias"></el-input>
           </el-form-item>
 
-          <el-form-item label="执行上级库存" prop="executeParentStoresFlag">
+          <el-form-item
+            v-show="isBussiness"
+            label="执行上级库存"
+            prop="executeParentStoresFlag"
+          >
             <el-switch
               v-model="nodeForm.executeParentStoresFlag"
               :active-value="1"
@@ -63,7 +80,11 @@
             ></el-switch>
           </el-form-item>
 
-          <el-form-item label="执行本级库存" prop="executeThisStoresFlag">
+          <el-form-item
+            v-show="isBussiness"
+            label="执行本级库存"
+            prop="executeThisStoresFlag"
+          >
             <el-switch
               v-model="nodeForm.executeThisStoresFlag"
               :active-value="1"
@@ -71,7 +92,7 @@
             ></el-switch>
           </el-form-item>
 
-          <el-form-item label="规则应用" prop="ruleId">
+          <el-form-item v-show="isBussiness" label="规则应用" prop="ruleId">
             <el-select v-model="nodeForm.ruleId" placeholder="请选择">
               <el-option label="规则1" value="111"></el-option>
               <el-option label="规则2" value="222"></el-option>
@@ -79,12 +100,16 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="节点备注" prop="remark">
+          <el-form-item
+            v-show="isBranchOrDelay || isBussiness"
+            label="节点备注"
+            prop="remark"
+          >
             <el-input type="textarea" v-model.trim="nodeForm.remark"></el-input>
           </el-form-item>
         </el-form>
 
-        <el-row>
+        <el-row v-show="isBranchOrDelay || isBussiness">
           <el-button @click="onNodeEditCancel">取消</el-button>
           <el-button @click="onNodeEditSubmit" type="primary">确认</el-button>
         </el-row>
@@ -109,6 +134,8 @@ import {
   BranchNodeConf,
   DelayNodeConf,
   emptyNodeProps,
+  StartNodeConf,
+  EndNodeConf,
 } from "./config";
 import GraphUtil from "./utils";
 import { getGraphOptions } from "./flow";
@@ -118,6 +145,8 @@ import { cloneDeep } from "lodash";
 Graph.registerNode("bussiness", BussinessNodeConf, true);
 Graph.registerNode("branch", BranchNodeConf, true);
 Graph.registerNode("delay", DelayNodeConf, true);
+Graph.registerNode("start", StartNodeConf, true);
+Graph.registerNode("end", EndNodeConf, true);
 
 let graphEngine = null;
 
@@ -158,6 +187,15 @@ export default {
     },
     nodeType2NameMap() {
       return NodeType2NameMap;
+    },
+    isStartOrEnd() {
+      return this.nodeForm.nodeType == 40 || this.nodeForm.nodeType == 50;
+    },
+    isBussiness() {
+      return this.nodeForm.nodeType == 10;
+    },
+    isBranchOrDelay() {
+      return this.nodeForm.nodeType == 20 || this.nodeForm.nodeType == 30;
     },
   },
   mounted() {
@@ -273,6 +311,8 @@ export default {
         console.log("edge:connected sourceNode", sourceNode);
         if (sourceNode.shape === "branch") {
           const branchNodeEdges = graph.getOutgoingEdges(sourceNode);
+          console.log("branchNodeEdges", branchNodeEdges);
+
           if (branchNodeEdges.length === 1) {
             edge.setData({ isYes: 1 });
           } else if (branchNodeEdges.length === 2) {
@@ -285,7 +325,6 @@ export default {
               });
             }
           }
-
           branchNodeEdges.forEach((item) => {
             const { data } = item;
             const { isYes } = data;
@@ -394,6 +433,58 @@ export default {
       Object.keys(this.nodeForm).forEach((k) => {
         this.nodeForm[k] = graphNodeData[k];
       });
+    },
+
+    handleDone() {
+      if (graphEngine) {
+        const gdata = graphEngine.toJSON();
+        // 构建提交数据
+        const serverNodes = [];
+        const gNodes = graphEngine.getNodes();
+
+        for (let i = 0; i < gNodes.length; i++) {
+          const currNode = gNodes[i];
+          const fromNodes = graphEngine.getPredecessors(currNode, {
+            distance: 1,
+          });
+          const toNodes = graphEngine.getSuccessors(currNode, {
+            distance: 1,
+          });
+
+          let [fromNodePosList, toNodePosList, toNoPos, toYesPos] = [[], []];
+          if (fromNodes) {
+            fromNodePosList = fromNodes.map((n) => n.id);
+          }
+          if (toNodes) {
+            toNodePosList = toNodes.map((n) => n.id);
+          }
+
+          if (currNode.shape === "branch") {
+            const branchNodeEdges = graphEngine.getOutgoingEdges(currNode);
+            branchNodeEdges.forEach((edge) => {
+              const { data, target } = edge;
+              if (data && data.isYes) {
+                toYesPos = target.cell;
+              } else {
+                toNoPos = target.cell;
+              }
+            });
+          }
+
+          const nodeProps = {
+            ...currNode.data,
+            fromNodePosList,
+            toNodePosList,
+            toYesPos,
+            toNoPos,
+          };
+
+          serverNodes.push(nodeProps);
+        }
+
+        console.log("serverNodes", serverNodes);
+        console.log("layout json", JSON.stringify(gdata));
+      }
     },
   },
 };
