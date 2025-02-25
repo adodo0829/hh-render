@@ -1,5 +1,5 @@
 export const InitBussinessNode = {
-  shape: "bussiness",
+  shape: "bussiness_init",
   width: 200,
   height: 60,
   label: "业务节点",

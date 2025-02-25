@@ -32,7 +32,7 @@ export default {
       const graph = new Graph(options);
       //   graph.fromJSON(dataJson);
       graph.addNode({
-        shape: "bussiness",
+        shape: "bussiness_init",
         x: 60,
         y: 100,
         data: {
