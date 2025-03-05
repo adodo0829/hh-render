@@ -229,6 +229,7 @@ export default {
           enabled: true,
         })
       );
+
       graph.bindKey(["meta+c", "ctrl+c"], () => {
         const cells = graph.getSelectedCells();
         if (cells.length) {
@@ -286,6 +287,7 @@ export default {
         const ports = container.querySelectorAll(".x6-port-body");
         GraphUtil.showPorts(ports, false);
       });
+
       graph.on("node:click", () => {
         graph.getEdges().forEach((e) => {
           e.attr("line/stroke", "#A2B1C3");
@@ -306,9 +308,9 @@ export default {
         this.graphBlankClick();
       });
       // 为条件边添加标签
-      graph.on("edge:connected", ({ edge }) => {
+      graph.on("edge:connected", ({ isNew, edge }) => {
         const sourceNode = edge.getSourceNode();
-        console.log("edge:connected sourceNode", sourceNode);
+        console.log("edge:connected sourceNode", isNew, sourceNode);
         if (sourceNode.shape === "branch") {
           const branchNodeEdges = graph.getOutgoingEdges(sourceNode);
           console.log("branchNodeEdges", branchNodeEdges);

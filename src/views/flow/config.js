@@ -1,5 +1,15 @@
 export const NodeTypeList = [
   {
+    type: 40,
+    code: "start",
+    name: "开始节点",
+  },
+  {
+    type: 50,
+    code: "end",
+    name: "结束节点",
+  },
+  {
     type: 10,
     code: "bussiness",
     name: "业务节点",
@@ -13,16 +23,6 @@ export const NodeTypeList = [
     type: 30,
     code: "delay",
     name: "延迟节点",
-  },
-  {
-    type: 40,
-    code: "start",
-    name: "开始节点",
-  },
-  {
-    type: 50,
-    code: "end",
-    name: "结束节点",
   },
 ];
 
