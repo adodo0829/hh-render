@@ -142,7 +142,9 @@ nextTick 优先级如下：
     <input type="checkbox" :checked="checked" @change="updateSomething" />
     <!-- 父组件使用 <v-input v-model="checked"></v-input> -->
 
-    <!-- 作用域插槽， 把子组件的数据传到父组件使用 -->
+    <!-- 作用域插槽， 把子组件的数据传到父组件使用  
+    作用域插槽（Scoped Slots） 是一种强大的功能，允许父组件访问子组件内部的数据，并在父组件中自定义渲染逻辑。
+    作用域插槽的核心思想是：子组件将数据通过插槽传递给父组件，父组件可以决定如何渲染这些数据。 -->
     <!-- 父组件 <template slot-scope="user">
       <div class="tmpl">
         <span v-for="item in user.data">{{ item }}</span>
@@ -150,7 +152,7 @@ nextTick 优先级如下：
     </template> -->
     <!-- <div class="tmpl" slot="footer"> -->
 
-    <!-- 子组件 -->
+    <!-- 子组件， 在slot绑定子组件的数据 -->
     <!-- <slot :data="data"></slot> -->
     <!-- <slot name="footer"></slot> -->
 
