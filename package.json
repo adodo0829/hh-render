@@ -16,6 +16,7 @@
     "@antv/x6-plugin-snapline": "^2.1.7",
     "core-js": "^3.6.5",
     "element-ui": "^2.15.13",
+    "three": "^0.180.0",
     "tiny-sdf": "1.0.2",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",

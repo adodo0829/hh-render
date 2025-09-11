@@ -9,6 +9,7 @@ import Matrix from "@/views/Matrix.vue";
 import TEST_GL_API from "@/views/TEST_GL_API.vue";
 import Flow from "@/views/flow/index.vue";
 import FlowView from "@/views/flowView/index.vue";
+import three from "@/views/three";
 
 import study from "@/views/study/index.vue";
 import html from "@/views/study/1.html.vue";
@@ -67,6 +68,11 @@ const routes = [
     path: "/FlowView",
     name: "FlowView",
     component: FlowView,
+  },
+  {
+    path: "/three",
+    name: "three",
+    component: three,
   },
   {
     path: "/study",
