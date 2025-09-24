@@ -13,6 +13,13 @@
         节流2，执行函数传参
       </button>
     </p>
+
+    <div class="if">
+      <iframe
+        id="childFrame"
+        src="http://localhost:8504/web-wcs-show-test/home"
+      ></iframe>
+    </div>
   </div>
 </template>
 
@@ -43,3 +50,15 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.if {
+  width: 500px;
+  height: 300px;
+  background-color: #ccc;
+}
+#childFrame {
+  width: 100%;
+  height: 100%;
+}
+</style>
